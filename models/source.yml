@@ -1,0 +1,33 @@
+sources:
+  - name: raw_jaffle_shop
+    database: raw
+    schema: jaffle_shop
+    tables:
+      - name: customers
+        description: Table containing customer information.
+        columns:
+          - name: id
+            description: Customer Unique id
+            data_type: integer
+          - name: first_name
+            description: First Name of the customer
+            data_type: text
+          - name: last_name
+            description: Last Name of the customer
+            data_type: text
+      - name: orders
+        description: Table containing orders information.
+        columns:
+          - name: id
+            description: Unique order id
+            data_type: integer
+          - name: user_id
+            description: Customer id
+            data_type: integer
+          - name: order_date
+            description: Order Date
+            data_type: date
+          - name: status
+            data_type: text
+          - name: _etl_loaded_at
+            data_type: timestamp
