@@ -31,3 +31,23 @@ sources:
             data_type: text
           - name: _etl_loaded_at
             data_type: timestamp
+  - name: raw_stripe
+    database: raw
+    schema: stripe
+    tables:
+      - name: payment
+        description: Table containing payment information.
+        columns:
+          - name: id
+            description: Unique payment id
+            data_type: integer
+          - name: orderid
+            data_type: integer
+          - name: paymentmethod
+            data_type: text
+          - name: status
+            data_type: text
+          - name: amount
+            data_type: integer
+          - name: created
+            data_type: date
