@@ -8,6 +8,10 @@ with
         where status in ('completed', 'shipped')
     )
 
-select c.cust_first_name as first_name, c.cust_last_name as last_name, o.order_date, o.status
+select
+    c.cust_first_name as first_name,
+    c.cust_last_name as last_name,
+    o.order_date,
+    o.status
 from customers c
 join orders o on o.user_id = c.cust_id
