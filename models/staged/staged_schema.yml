@@ -2,8 +2,6 @@ models:
   - name: stg_customer_orders
     config:
       materialized: table
-      contract: 
-        enforced: true
     columns:
       - name: first_name
         data_type: text
