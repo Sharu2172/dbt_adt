@@ -41,8 +41,8 @@ models:
     raw:
       +materialized: table
       +schema: raw
+      +contract:
+        enforced: true
     staged:
       +materialized: view
       +schema: staged
-      +contract:
-        enforced: true

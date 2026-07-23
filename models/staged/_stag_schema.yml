@@ -1,0 +1,53 @@
+models:
+  - name: stg_customer_orders
+    config:
+      materialized: table
+      contract: 
+        enforced: true
+    columns:
+      - name: first_name
+        data_type: text
+        data_tests:
+          - not_null
+      - name: last_name
+        data_type: text
+        data_tests:
+          - not_null
+      - name: order_date
+        data_type: date
+        data_tests:
+          - not_null
+      - name: status
+        data_type: text
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['completed', 'shipped']
+  
+  - name: stg_payment_orders
+    config:
+      materialized: table
+      contract: 
+        enforced: true
+    columns:
+      - name: user_id
+        data_type: integer
+        data_tests:
+          - relationships:
+              arguments: 
+                to: ref('raw_customers')
+                field: cust_id
+      - name: order_date
+        data_type: date
+      - name: order_status
+        data_type: text
+        data_tests:
+          - not_null
+      - name: paymentmethod
+        data_type: text
+      - name: amount
+        data_type: integer
+      - name: payment_status
+        data_type: text
+      - name: payment_date
+        data_type: date
