@@ -1,33 +1,84 @@
 sources:
   - name: raw_jaffle_shop
+    description: Source data loaded from the jaffle_shop application schema.
     database: raw
     schema: jaffle_shop
     tables:
       - name: customers
-        description: Table containing customer information.
+        description: Customer records from the jaffle_shop application.
         columns:
           - name: id
-            description: Customer Unique id
+            description: Primary key for each customer record.
             data_type: integer
+            data_tests:
+              - unique
+              - not_null
           - name: first_name
-            description: First Name of the customer
+            description: Customer's given name.
             data_type: text
           - name: last_name
-            description: Last Name of the customer
+            description: Customer's family name.
             data_type: text
       - name: orders
-        description: Table containing orders information.
+        description: Order records from the jaffle_shop application.
+        config: 
+          freshness:
+            warn_after:
+              count: 12
+              period: hour
+            error_after:
+              count: 24
+              period: hour
+          loaded_at_field: _etl_loaded_at
         columns:
           - name: id
-            description: Unique order id
+            description: Primary key for each order.
             data_type: integer
+            data_tests:
+              - not_null
+              - unique
           - name: user_id
-            description: Customer id
+            description: Foreign key to the customer who placed the order.
             data_type: integer
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments: 
+                    to: source('raw_jaffle_shop', 'customers')
+                    field: id
           - name: order_date
-            description: Order Date
+            description: Date the order was created.
             data_type: date
           - name: status
+            description: Current lifecycle status of the order.
             data_type: text
           - name: _etl_loaded_at
+            description: Timestamp when the row was loaded into the warehouse.
             data_type: timestamp
+            
+  - name: raw_stripe
+    description: Source data loaded from the Stripe payments schema.
+    database: raw
+    schema: stripe
+    tables:
+      - name: payment
+        description: Payment transaction records from Stripe.
+        columns:
+          - name: id
+            description: Primary key for each payment record.
+            data_type: integer
+          - name: orderid
+            description: Foreign key to the related order.
+            data_type: integer
+          - name: paymentmethod
+            description: Payment method used for the transaction.
+            data_type: text
+          - name: status
+            description: Current processing status of the payment.
+            data_type: text
+          - name: amount
+            description: Payment amount captured for the transaction.
+            data_type: integer
+          - name: created
+            description: Date the payment record was created.
+            data_type: date

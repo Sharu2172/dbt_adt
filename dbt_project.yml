@@ -36,13 +36,13 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
-  dbt_adt:
+  analytics:
     # Applies to all files under models/example/
     raw:
       +materialized: table
       +schema: raw
+      +contract:
+        enforced: true
     staged:
       +materialized: view
       +schema: staged
-      +contract:
-        enforced: true
