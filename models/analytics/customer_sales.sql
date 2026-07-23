@@ -1,7 +1,3 @@
-{{ config(
-    materialized='ephemeral' if target.name == 'dev' else 'table'
-) }}
-
 with customer_orders as (
     select *
     from {{ ref('stg_customer_orders') }}
