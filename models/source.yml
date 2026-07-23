@@ -9,6 +9,9 @@ sources:
           - name: id
             description: Customer Unique id
             data_type: integer
+            data_tests:
+              - unique
+              - not_null
           - name: first_name
             description: First Name of the customer
             data_type: text
@@ -30,9 +33,19 @@ sources:
           - name: id
             description: Unique order id
             data_type: integer
+            data_tests:
+              - not_null
+              - unique
+              
           - name: user_id
             description: Customer id
             data_type: integer
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments: 
+                    to: source('raw_jaffle_shop', 'customers')
+                    field: id
           - name: order_date
             description: Order Date
             data_type: date
