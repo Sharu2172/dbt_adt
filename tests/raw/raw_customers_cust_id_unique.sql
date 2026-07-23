@@ -1,4 +1,4 @@
-select cust_id
+select customer_id
 from {{ ref('raw_customers') }}
-group by cust_id
+group by customer_id
 having count(*) > 1

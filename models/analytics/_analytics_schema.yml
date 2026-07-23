@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: customer_sales
+    description: Customer sales summary by customer, order date, order status, and payment method.
+    columns:
+      - name: customer_name
+        description: Full name of the customer associated with the order.
+      - name: order_date
+        description: Date the order was placed.
+      - name: order_status
+        description: Lifecycle status of the order.
+      - name: order_count
+        description: The Number of order placed by customer.
+      - name: paymentmethod
+        description: Payment method used for the order.
+      - name: total
+        description: Total payment amount aggregated for the customer, date, status, and payment method.
+      - name: max
+        description: Highest individual payment amount in the grouped records.
+      - name: min
+        description: Lowest individual payment amount in the grouped records.
+
+unit_tests:
+  - name: test_customer_sales_aggregates_by_customer_order_and_payment_method
+    description: Verifies that customer_sales groups payments correctly and returns aggregate payment metrics.
+    model: customer_sales
+    given:
+      - input: ref('stg_customer_orders')
+        format: sql
+        rows: |
+          select
+            1 as customer_id,
+            'Jane Doe' as customer_name,
+            to_date('2024-01-01') as order_date,
+            'completed' as order_status
+      - input: ref('stg_payment_orders')
+        format: sql
+        rows: |
+          select
+            1 as customer_id,
+            to_date('2024-01-01') as order_date,
+            'completed' as order_status,
+            'credit_card' as paymentmethod,
+            10 as amount,
+            'success' as payment_status,
+            to_date('2024-01-01') as payment_date
+          union all
+          select
+            1 as customer_id,
+            to_date('2024-01-01') as order_date,
+            'completed' as order_status,
+            'credit_card' as paymentmethod,
+            25 as amount,
+            'success' as payment_status,
+            to_date('2024-01-01') as payment_date
+    expect:
+      rows:
+        - customer_name: Jane Doe
+          order_date: '2024-01-01'
+          order_status: completed
+          paymentmethod: credit_card
+          order_count: 2
+          total: 35
+          max: 25
+          min: 10
