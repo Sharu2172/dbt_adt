@@ -1,23 +1,28 @@
 models:
   - name: stg_customer_orders
+    description: Customer-order records for completed and shipped orders, one row per customer-order combination.
     config:
       materialized: table
       contract: 
         enforced: true
     columns:
       - name: first_name
+        description: Customer first name.
         data_type: text
         data_tests:
           - not_null
       - name: last_name
+        description: Customer last name.
         data_type: text
         data_tests:
           - not_null
       - name: order_date
+        description: Date the qualifying order was placed.
         data_type: date
         data_tests:
           - not_null
       - name: status
+        description: Filtered order status for qualifying orders.
         data_type: text
         data_tests:
           - accepted_values:
@@ -29,12 +34,14 @@ models:
             compare_model: ref('raw_orders')
   
   - name: stg_payment_orders
+    description: Order-payment records joined from orders and payments, one row per matched order payment.
     config:
       materialized: table
       contract: 
         enforced: true
     columns:
       - name: user_id
+        description: Customer identifier associated with the order.
         data_type: integer
         data_tests:
           - relationships:
@@ -42,18 +49,24 @@ models:
                 to: ref('raw_customers')
                 field: cust_id
       - name: order_date
+        description: Date the order was placed.
         data_type: date
       - name: order_status
+        description: Lifecycle status of the order.
         data_type: text
         data_tests:
           - not_null
       - name: paymentmethod
+        description: Payment method used for the order.
         data_type: text
       - name: amount
+        description: Payment amount associated with the order.
         data_type: integer
         data_tests:
           - positive_amount
       - name: payment_status
+        description: Processing status of the payment.
         data_type: text
       - name: payment_date
+        description: Date the payment was created.
         data_type: date
